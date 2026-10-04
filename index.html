@@ -1,0 +1,69 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <title>Quick To-Do</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <header>
+        <div>
+            <h1>To-Do</h1>
+            <div id="date"></div>
+        </div>
+
+        <button id="clearCompleted" class="text-button">
+            Clear
+        </button>
+    </header>
+
+    <main>
+
+        <div class="input-area">
+            <input
+                id="taskInput"
+                type="text"
+                placeholder="What needs to be done?"
+                autocomplete="off"
+                enterkeyhint="done"
+            >
+
+            <button id="addButton" aria-label="Add task">
+                +
+            </button>
+        </div>
+
+        <div id="taskList"></div>
+
+        <div id="emptyMessage">
+            <div class="empty-icon">✓</div>
+            <div>Nothing to do</div>
+        </div>
+
+    </main>
+
+    <footer>
+        <span id="taskCount">0 tasks</span>
+    </footer>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
+```
