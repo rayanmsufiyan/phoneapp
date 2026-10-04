@@ -1,67 +1,221 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-    <title>Quick To-Do</title>
-
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0F14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HomeFlow">
+<title>HomeFlow</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{
+ --bg:#0B0F14;--sidebar:#10161F;--card:#151C26;--card2:#1B2430;--card3:#222D3B;
+ --text:#F4F7FA;--muted:#91A0B3;--green:#32D583;--red:#FF5C6C;--orange:#FFB020;
+ --blue:#4C8DFF;--purple:#9B7BFF;--yellow:#FFD166;--border:#2A3544;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:flex}
+.sidebar{width:245px;flex:0 0 245px;background:var(--sidebar);padding:24px 14px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{padding:0 6px 20px}.brand small{color:var(--blue);font-weight:800;letter-spacing:1px}.brand h1{font-size:28px;margin:2px 0}.brand p{font-size:11px;color:var(--muted);margin:0}
+.profile{background:var(--card);border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--blue);display:grid;place-items:center;font-weight:800}
+.profile b{font-size:14px}.profile span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.nav{display:grid;gap:3px}.nav button{border:0;background:transparent;color:var(--muted);text-align:left;padding:11px 12px;border-radius:10px;font-weight:600}
+.nav button.active{background:var(--blue);color:#fff}.nav button:hover{background:var(--card2);color:#fff}
+.system{margin:20px 8px 8px;color:var(--muted);font-size:10px;font-weight:800}
+.sidebar-foot{margin-top:auto;color:var(--muted);font-size:9px;text-align:center}
+.content{flex:1;min-width:0;max-width:1400px;margin:auto;padding:22px 30px 30px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:15px}
+.header h2{font-size:28px;margin:0}.header p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.primary,.secondary,.danger{border:0;border-radius:10px;padding:10px 15px;color:#fff;font-weight:700}
+.primary{background:var(--blue)}.secondary{background:var(--card3)}.danger{background:#3a2025;color:#ff9da7}
+.card{background:var(--card);border-radius:16px;padding:18px;margin-bottom:14px;border:1px solid transparent}
+.hero{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
+.hero h3{font-size:20px;margin:0 0 5px}.muted{color:var(--muted)}.progress{height:11px;background:var(--card3);border-radius:9px;overflow:hidden;margin:14px 0 6px}.progress i{display:block;height:100%;background:var(--green);border-radius:9px}
+.percent{font-size:42px;font-weight:800;color:var(--green)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:var(--card);padding:15px;border-radius:14px}.stat small{color:var(--muted);font-size:9px;font-weight:800}.stat strong{display:block;font-size:25px;margin-top:3px}
+.two{display:grid;grid-template-columns:3fr 2fr;gap:14px}.section-title{font-size:17px;font-weight:800;margin-bottom:10px}
+.task,.medicine,.shop{background:var(--card);border-radius:14px;padding:13px;margin:7px 0;border:1px solid var(--border)}
+.task{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--orange)}.dot.high{background:var(--red)}.dot.low{background:var(--green)}
+.task h4,.medicine h4,.shop h4{margin:0;font-size:14px}.task p,.medicine p,.shop p{margin:4px 0 0;color:var(--muted);font-size:11px}.done h4{text-decoration:line-through;color:var(--muted)}
+.actions{display:flex;gap:5px;flex-wrap:wrap}.actions button{border:0;background:var(--card3);color:#fff;border-radius:8px;padding:7px 9px;font-size:11px}.actions .ok{background:var(--green);color:#07120d}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar input,.toolbar select,.field input,.field select,.field textarea,.chat-input input{background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:10px;outline:0}.toolbar input{flex:1;min-width:170px}
+.badge{display:inline-block;border-radius:7px;padding:4px 7px;color:#fff;font-size:9px;font-weight:800}.today{background:var(--blue)}.overdue{background:var(--red)}.completed{background:var(--green)}.upcoming{background:var(--purple)}
+.empty{text-align:center;color:var(--muted);padding:35px 10px}.empty b{display:block;color:var(--text);margin-bottom:4px}
+.calendar-top{display:flex;align-items:center;gap:8px;margin-bottom:12px}.calendar-top h3{margin:0 12px;font-size:19px}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.weekday{text-align:center;color:var(--muted);font-size:9px;font-weight:800;padding:6px}.day{min-height:78px;background:var(--card2);border-radius:9px;padding:7px;border:0;color:var(--text);text-align:left}.day.muted-day{opacity:.3}.day .num{font-weight:800;font-size:12px}.day.sel{outline:2px solid var(--blue)}.day.today{background:#17305c}.day small{display:block;margin-top:9px;font-size:8px;color:var(--muted)}.day small.pending{color:var(--orange)}
+.medicine,.shop{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center}.iconbox{width:46px;height:46px;border-radius:12px;background:#35232a;color:var(--red);display:grid;place-items:center;font-size:20px;font-weight:800}.shop .iconbox{background:#29223a;color:var(--purple)}
+.chart{height:220px;display:flex;align-items:end;gap:12px;padding:15px}.barcol{flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:5px}.bar{width:100%;max-width:42px;background:var(--blue);border-radius:7px 7px 2px 2px;min-height:2px}.barcol small{color:var(--muted);font-size:9px}
+.chat{display:flex;flex-direction:column;height:520px}.messages{flex:1;overflow:auto;padding:5px}.bubble{max-width:82%;padding:10px 12px;border-radius:12px;margin:7px 0;white-space:pre-wrap;font-size:13px;line-height:1.4}.bubble.user{background:var(--blue);margin-left:auto}.bubble.bot{background:var(--card2)}.chat-input{display:flex;gap:8px;margin-top:10px}.chat-input input{flex:1}
+.share-row{display:flex;align-items:center;justify-content:space-between;gap:15px}.share-row h4{margin:0}.share-row p{margin:4px 0 0;color:var(--muted);font-size:11px}
+.field{display:grid;gap:6px;margin:12px 0}.field label{color:var(--muted);font-size:11px;font-weight:700}.field textarea{min-height:80px;resize:vertical}
+.mobile-nav{display:none}
+.modal-back{position:fixed;inset:0;background:#0009;display:grid;place-items:center;padding:15px;z-index:20}.modal{width:min(560px,100%);max-height:92vh;overflow:auto;background:var(--bg);border:1px solid var(--border);border-radius:18px;padding:22px}.modal h3{margin:0 0 4px;font-size:22px}.modal p.sub{margin:0 0 16px;color:var(--muted);font-size:11px}.modal-actions{display:flex;gap:8px;margin-top:18px}.modal-actions>*{flex:1}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--card3);padding:10px 15px;border-radius:10px;box-shadow:0 10px 30px #0006;z-index:40;font-size:12px}
+@media(max-width:800px){
+ .app{display:block;padding-bottom:72px}.sidebar{display:none}.content{padding:18px 14px 20px}.header{margin-bottom:15px}.header h2{font-size:24px}.header .primary{padding:10px 12px}
+ .stats{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.percent{font-size:30px}
+ .calendar{gap:3px}.day{min-height:65px;padding:5px}.day small{margin-top:5px}
+ .mobile-nav{display:flex;position:fixed;z-index:15;bottom:0;left:0;right:0;background:#10161fee;backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:7px 4px calc(7px + env(safe-area-inset-bottom));justify-content:space-around}
+ .mobile-nav button{background:none;border:0;color:var(--muted);font-size:9px;display:grid;gap:2px;place-items:center}.mobile-nav button b{font-size:19px;font-weight:500}.mobile-nav button.active{color:#fff}
+ .task{grid-template-columns:auto 1fr}.task .actions{grid-column:2}.medicine,.shop{grid-template-columns:42px 1fr}.medicine .actions,.shop .actions{grid-column:2}.iconbox{width:40px;height:40px}
+}
+</style>
 </head>
-
 <body>
-
 <div class="app">
-
-    <header>
-        <div>
-            <h1>To-Do</h1>
-            <div id="date"></div>
-        </div>
-
-        <button id="clearCompleted" class="text-button">
-            Clear
-        </button>
-    </header>
-
-    <main>
-
-        <div class="input-area">
-            <input
-                id="taskInput"
-                type="text"
-                placeholder="What needs to be done?"
-                autocomplete="off"
-                enterkeyhint="done"
-            >
-
-            <button id="addButton" aria-label="Add task">
-                +
-            </button>
-        </div>
-
-        <div id="taskList"></div>
-
-        <div id="emptyMessage">
-            <div class="empty-icon">✓</div>
-            <div>Nothing to do</div>
-        </div>
-
-    </main>
-
-    <footer>
-        <span id="taskCount">0 tasks</span>
-    </footer>
-
+<aside class="sidebar" id="sidebar"></aside>
+<main class="content">
+<div id="view"></div>
+</main>
 </div>
-
-<script src="app.js"></script>
-
+<nav class="mobile-nav" id="mobileNav"></nav>
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
+<script>
+const APP="HomeFlow", VERSION="3.0";
+const KEY="homeflow_web_v3";
+const DEFAULT={version:VERSION,profile:{name:"Mothamai",subtitle:"Household Manager"},tasks:[],medicines:[],shopping:[],activity:{},settings:{appearance:"dark",autosave:true},recent_activity:[]};
+let data=load(), page="Dashboard", taskSearch="",taskFilter="All",taskSort="Date",shopSearch="",calDate=new Date(),selectedDate=today(),chatHistory=[];
+const $=s=>document.querySelector(s);
+function today(){return new Date().toISOString().slice(0,10)}
+function now(){return new Date().toISOString().slice(0,19).replace("T"," ")}
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function id(a){return Math.max(0,...a.map(x=>Number(x.id)||0))+1}
+function load(){try{return merge(JSON.parse(localStorage.getItem(KEY)||"null"))}catch{return clone(DEFAULT)}}
+function merge(raw){let d=clone(DEFAULT);if(raw&&typeof raw==="object")Object.assign(d,raw);d.profile=d.profile||clone(DEFAULT.profile);d.tasks=Array.isArray(d.tasks)?d.tasks:[];d.medicines=Array.isArray(d.medicines)?d.medicines:[];d.shopping=Array.isArray(d.shopping)?d.shopping:[];d.activity=d.activity||{};d.settings=d.settings||clone(DEFAULT.settings);d.recent_activity=Array.isArray(d.recent_activity)?d.recent_activity:[];d.tasks.forEach(t=>Object.assign(t,{id:t.id??id(d.tasks),name:t.name||"Untitled task",category:t.category||"General",date:t.date||today(),time:t.time||"",priority:t.priority||"Medium",repeat:t.repeat||"None",completed:!!t.completed,created_at:t.created_at||now(),completed_at:t.completed_at||"",notes:t.notes||""}));d.medicines.forEach(m=>Object.assign(m,{id:m.id??id(d.medicines),name:m.name||"Medicine",dosage:m.dosage||"",time:m.time||"",frequency:m.frequency||"Daily",active:m.active!==false,history:m.history||[]}));d.shopping.forEach(x=>Object.assign(x,{id:x.id??id(d.shopping),name:x.name||"Item",category:x.category||"General",completed:!!x.completed,created_at:x.created_at||now()}));return d}
+function save(){if(data.settings.autosave!==false)localStorage.setItem(KEY,JSON.stringify(data))}
+function log(s){data.recent_activity.unshift({text:s,time:now()});data.recent_activity=data.recent_activity.slice(0,30);save()}
+function fmtDate(v){if(!v)return "";let d=new Date(v+"T00:00:00");return d.toLocaleDateString(undefined,{day:"2-digit",month:"short",year:"numeric"})}
+function fmtTime(v){if(!v)return "No time";let [h,m]=v.split(":");let d=new Date();d.setHours(+h,+m);return d.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}
+function overdue(t){if(t.completed||!t.date)return false;return t.date<today()||(t.date===today()&&t.time&&new Date(t.date+"T"+t.time)<new Date())}
+function status(t){if(t.completed)return"Completed";if(overdue(t))return"Overdue";if(t.date===today())return"Today";return"Upcoming"}
+function pcolor(p){return p==="High"?"high":p==="Low"?"low":""}
+function navItems(){return [["⌂","Dashboard"],["✓","Tasks"],["▦","Calendar"],["◉","Medicines"],["□","Shopping"],["▥","Analytics"],["✦","Assistant"],["↗","Share"],["⚙","Settings"]]}
+function renderNav(){
+ $("#sidebar").innerHTML=`<div class="brand"><small>HOME</small><h1>FLOW</h1><p>Professional • V${VERSION}</p></div>
+ <div class="profile"><div class="avatar">${(data.profile.name||"MF").slice(0,2).toUpperCase()}</div><div><b>${esc(data.profile.name)}</b><span>Household</span></div></div>
+ <div class="nav">${navItems().map(x=>`<button class="${page===x[1]?"active":""}" onclick="go('${x[1]}')">${x[0]} &nbsp; ${x[1]}</button>`).join("")}</div>
+ <div class="sidebar-foot">LOCAL DATA • AUTO-SAVED</div>`;
+ const mobile=navItems().slice(0,5);
+ $("#mobileNav").innerHTML=mobile.map(x=>`<button class="${page===x[1]?"active":""}" onclick="go('${x[1]}')"><b>${x[0]}</b>${x[1]}</button>`).join("");
+}
+function go(p){page=p;renderNav();render()}
+function header(title,sub,action=""){return `<div class="header"><div><h2>${title}</h2><p>${sub}</p></div>${action?`<button class="primary" onclick="${action[1]}">${action[0]}</button>`:""}</div>`}
+function render(){let f={Dashboard:dashboard,Tasks:tasks,Calendar:calendar,Medicines:medicines,Shopping:shopping,Analytics:analytics,Assistant:assistant,Share:share,Settings:settings}[page]||dashboard;$("#view").innerHTML=f();bind();renderNav()}
+function stat(t,v,c){return `<div class="stat"><small>${t.toUpperCase()}</small><strong style="color:${c}">${v}</strong></div>`}
+function dashboard(){
+ let all=data.tasks,todayT=all.filter(t=>t.date===today()),done=todayT.filter(t=>t.completed).length,pending=all.filter(t=>!t.completed),over= pending.filter(overdue).length,pct=todayT.length?Math.round(done/todayT.length*100):0;
+ return header("Good day, "+esc(data.profile.name),new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"}),["+ Add Task","openTask()"])+
+ `<div class="card hero"><div><h3>Today at a glance</h3><div class="muted">${done} of ${todayT.length} tasks completed</div><div class="progress"><i style="width:${pct}%"></i></div><b style="color:var(--green)">${pct}% complete</b></div><div class="percent">${pct}%</div></div>
+ <div class="stats">${stat("Due Today",todayT.length,"var(--blue)")} ${stat("Overdue",over,"var(--red)")} ${stat("Pending",pending.length,"var(--orange)")} ${stat("Shopping",data.shopping.filter(x=>!x.completed).length,"var(--purple)")}</div>
+ <div class="two" style="margin-top:14px"><div class="card"><div class="section-title">Today's Tasks</div>${todayT.length?todayT.sort((a,b)=>(a.time||"99").localeCompare(b.time||"99")).map(compactTask).join(""):empty("No tasks scheduled for today","Your day is clear.")}</div>
+ <div><div class="card"><div class="section-title">Upcoming</div>${upcoming().slice(0,4).map(upcomingRow).join("")||empty("Nothing upcoming","Add a task when needed.")}</div>
+ <div class="card"><div class="section-title">Recent Activity</div>${data.recent_activity.slice(0,6).map(x=>`<div class="muted" style="padding:5px 0;font-size:11px">• ${esc(x.text)}</div>`).join("")||empty("No recent activity","Actions will appear here.")}</div></div></div>`;
+}
+function upcoming(){return data.tasks.filter(t=>!t.completed&&t.date>today()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time))}
+function compactTask(t){return `<div class="task ${t.completed?"done":""}"><span class="dot ${pcolor(t.priority)}"></span><div><h4>${t.completed?"✓ ":""}${esc(t.name)}</h4><p>${t.time?fmtTime(t.time):"No time"} • ${esc(t.category)}</p></div><div class="actions"><button class="${t.completed?"":"ok"}" onclick="toggleTask(${t.id})">${t.completed?"Undo":"Done"}</button></div></div>`}
+function upcomingRow(t){return `<div class="task"><b style="background:var(--card3);padding:9px;border-radius:9px;color:var(--blue)">${new Date(t.date+"T00:00:00").getDate()}</b><div><h4>${esc(t.name)}</h4><p>${fmtDate(t.date)} • ${fmtTime(t.time)}</p></div></div>`}
+function empty(a,b){return `<div class="empty"><b>${a}</b>${b}</div>`}
+function tasks(){
+ let a=filtered();
+ return header("Task Manager","Plan, organize and complete household work.",["+ New Task","openTask()"])+
+ `<div class="card"><div class="toolbar"><input id="taskSearch" value="${esc(taskSearch)}" placeholder="Search tasks..."><button class="secondary" onclick="applyTaskSearch()">Search</button><select id="taskFilter" onchange="taskFilter=this.value;render()">${["All","Today","Upcoming","Overdue","Completed","Pending"].map(x=>`<option ${x===taskFilter?"selected":""}>${x}</option>`).join("")}</select><select onchange="taskSort=this.value;render()">${["Date","Priority","Name","Status"].map(x=>`<option ${x===taskSort?"selected":""}>${x}</option>`).join("")}</select></div><div class="muted" style="font-size:12px">${a.length} task(s)</div></div>
+ ${a.map(fullTask).join("")||empty("No tasks found","Try another filter or create a new task.")}`;
+}
+function applyTaskSearch(){taskSearch=$("#taskSearch").value.trim();render()}
+function filtered(){let a=[...data.tasks],q=taskSearch.toLowerCase();if(q)a=a.filter(t=>(t.name+" "+t.category+" "+t.notes).toLowerCase().includes(q));if(taskFilter==="Today")a=a.filter(t=>t.date===today());if(taskFilter==="Upcoming")a=a.filter(t=>t.date>today()&&!t.completed);if(taskFilter==="Overdue")a=a.filter(overdue);if(taskFilter==="Completed")a=a.filter(t=>t.completed);if(taskFilter==="Pending")a=a.filter(t=>!t.completed);if(taskSort==="Name")a.sort((x,y)=>x.name.localeCompare(y.name));else if(taskSort==="Priority"){let r={High:0,Medium:1,Low:2};a.sort((x,y)=>(r[x.priority]??3)-(r[y.priority]??3))}else if(taskSort==="Status"){let r={Overdue:0,Today:1,Upcoming:2,Completed:3};a.sort((x,y)=>(r[status(x)]??4)-(r[status(y)]??4))}else a.sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time));return a}
+function fullTask(t){let s=status(t),cls=s.toLowerCase();return `<div class="task ${t.completed?"done":""}" style="${s==="Overdue"?"border-color:var(--red)":""}"><span class="badge ${cls}">${s.toUpperCase()}</span><div><h4>${t.completed?"✓ ":""}${esc(t.name)} <span class="badge" style="background:${t.priority==="High"?"var(--red)":t.priority==="Low"?"var(--green)":"var(--orange)"}">${t.priority}</span></h4><p>${fmtDate(t.date)} • ${fmtTime(t.time)} • ${esc(t.category)}${t.notes?" • "+esc(t.notes):""}</p></div><div class="actions"><button class="${t.completed?"":"ok"}" onclick="toggleTask(${t.id})">${t.completed?"Undo":"Done"}</button><button onclick="openTask(${t.id})">Edit</button><button class="danger" onclick="deleteTask(${t.id})">Delete</button></div></div>`}
+function toggleTask(i){let t=data.tasks.find(x=>x.id===i);if(!t)return;t.completed=!t.completed;t.completed_at=t.completed?now():"";if(t.completed){data.activity[today()]=(data.activity[today()]||0)+1;log("Completed: "+t.name);nextRepeat(t)}else log("Reopened: "+t.name);save();render()}
+function nextRepeat(t){if(t.repeat==="None")return;let d=new Date(t.date+"T00:00:00");if(t.repeat==="Daily")d.setDate(d.getDate()+1);if(t.repeat==="Weekly")d.setDate(d.getDate()+7);if(t.repeat==="Monthly")d.setMonth(d.getMonth()+1);let nd=d.toISOString().slice(0,10);if(data.tasks.some(x=>x.name===t.name&&x.date===nd&&!x.completed))return;let n=clone(t);n.id=id(data.tasks);n.date=nd;n.completed=false;n.completed_at="";n.created_at=now();data.tasks.push(n)}
+function deleteTask(i){if(!confirm("Delete this task?"))return;let t=data.tasks.find(x=>x.id===i);data.tasks=data.tasks.filter(x=>x.id!==i);log("Deleted task: "+(t?.name||""));save();render()}
+function openTask(i=null){let t=i?data.tasks.find(x=>x.id===i):null;modal(`<h3>${t?"Edit Task":"Create Task"}</h3><p class="sub">Keep household work organized and easy to follow.</p>
+<div class="field"><label>Task name</label><input id="mName" value="${esc(t?.name||"")}" placeholder="e.g. Clean kitchen"></div>
+<div class="field"><label>Category</label><select id="mCat">${["General","Cleaning","Cooking","Shopping","Medicine","Family","Bills"].map(x=>`<option ${x===(t?.category||"General")?"selected":""}>${x}</option>`).join("")}</select></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="field"><label>Date</label><input id="mDate" type="date" value="${t?.date||today()}"></div><div class="field"><label>Time</label><input id="mTime" type="time" value="${t?.time||""}"></div></div>
+<div class="field"><label>Priority</label><select id="mPriority">${["High","Medium","Low"].map(x=>`<option ${x===(t?.priority||"Medium")?"selected":""}>${x}</option>`).join("")}</select></div>
+<div class="field"><label>Repeat</label><select id="mRepeat">${["None","Daily","Weekly","Monthly"].map(x=>`<option ${x===(t?.repeat||"None")?"selected":""}>${x}</option>`).join("")}</select></div>
+<div class="field"><label>Notes</label><textarea id="mNotes">${esc(t?.notes||"")}</textarea></div>
+<div class="modal-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="primary" onclick="saveTask(${i||"null"})">Save Task</button></div>`)}
+function saveTask(i){let n=$("#mName").value.trim();if(!n)return alert("Please enter a task name.");let o=i?data.tasks.find(x=>x.id===i):{id:id(data.tasks),completed:false,created_at:now(),completed_at:""};Object.assign(o,{name:n,category:$("#mCat").value,date:$("#mDate").value||today(),time:$("#mTime").value,priority:$("#mPriority").value,repeat:$("#mRepeat").value,notes:$("#mNotes").value.trim()});if(!i)data.tasks.push(o),log("Added task: "+n);else log("Updated task: "+n);save();closeModal();render()}
+function calendar(){
+ let y=calDate.getFullYear(),m=calDate.getMonth(),first=new Date(y,m,1),start=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate(),cells=[];
+ for(let i=0;i<start;i++)cells.push(`<div class="day muted-day"></div>`);
+ for(let d=1;d<=days;d++){let iso=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,ts=data.tasks.filter(t=>t.date===iso),p=ts.filter(t=>!t.completed).length,done=ts.length-p;cells.push(`<button class="day ${iso===today()?"today ":""}${iso===selectedDate?"sel":""}" onclick="selectedDate='${iso}';render()"><span class="num">${d}</span>${ts.length?`<small class="${p?"pending":""}">${p} pending</small><small>${done} done</small>`:""}</button>`)}
+ return header("Calendar","A clear monthly view of your household schedule.")+`<div class="card"><div class="calendar-top"><button class="secondary" onclick="calDate.setMonth(calDate.getMonth()-1);render()">‹</button><button class="secondary" onclick="calDate=new Date();selectedDate=today();render()">Today</button><button class="secondary" onclick="calDate.setMonth(calDate.getMonth()+1);render()">›</button><h3>${calDate.toLocaleDateString(undefined,{month:"long",year:"numeric"})}</h3></div><div class="calendar">${["MON","TUE","WED","THU","FRI","SAT","SUN"].map(x=>`<div class="weekday">${x}</div>`).join("")}${cells.join("")}</div></div><div class="card"><div class="section-title">Tasks for ${fmtDate(selectedDate)}</div>${data.tasks.filter(t=>t.date===selectedDate).map(compactTask).join("")||empty("No tasks on this date","Click another date or add a task.")}</div>`
+}
+function medicines(){
+ return header("Medicines","Keep medicine information organized in one place.",["+ Add Medicine","openMedicine()"])+`<div class="card"><b>${data.medicines.filter(m=>m.active).length} active medicine reminder(s)</b><div class="muted" style="font-size:11px;margin-top:4px">Reminder information stays inside HomeFlow.</div></div>${data.medicines.map(medCard).join("")||empty("No medicines added","Add medicine details when needed.")}`
+}
+function medCard(m){return `<div class="medicine"><div class="iconbox">✚</div><div><h4>${esc(m.name)}</h4><p>${esc(m.dosage||"No dosage")} • ${m.time?fmtTime(m.time):"No time"} • ${esc(m.frequency)}</p><p style="color:${m.active?"var(--green)":"var(--muted)"}">${m.active?"ACTIVE":"INACTIVE"}</p></div><div class="actions"><button onclick="toggleMed(${m.id})">Toggle</button><button onclick="openMedicine(${m.id})">Edit</button><button class="danger" onclick="deleteMed(${m.id})">Delete</button></div></div>`}
+function openMedicine(i=null){let m=i?data.medicines.find(x=>x.id===i):null;modal(`<h3>${m?"Edit Medicine":"Add Medicine"}</h3><p class="sub">Store medicine details and reminder time.</p><div class="field"><label>Medicine name</label><input id="mn" value="${esc(m?.name||"")}" placeholder="e.g. Vitamin D"></div><div class="field"><label>Dosage</label><input id="md" value="${esc(m?.dosage||"")}" placeholder="e.g. 1 tablet"></div><div class="field"><label>Time</label><input id="mt" type="time" value="${m?.time||""}"></div><div class="field"><label>Frequency</label><select id="mf">${["Daily","Twice Daily","Weekly","As Needed"].map(x=>`<option ${x===(m?.frequency||"Daily")?"selected":""}>${x}</option>`).join("")}</select></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="primary" onclick="saveMed(${i||"null"})">Save Medicine</button></div>`)}
+function saveMed(i){let n=$("#mn").value.trim();if(!n)return alert("Please enter a medicine name.");let m=i?data.medicines.find(x=>x.id===i):{id:id(data.medicines),active:true,history:[]};Object.assign(m,{name:n,dosage:$("#md").value.trim(),time:$("#mt").value,frequency:$("#mf").value});if(!i)data.medicines.push(m),log("Added medicine: "+n);else log("Updated medicine: "+n);save();closeModal();render()}
+function toggleMed(i){let m=data.medicines.find(x=>x.id===i);m.active=!m.active;log(`${m.active?"Activated":"Deactivated"} medicine: ${m.name}`);save();render()}
+function deleteMed(i){if(!confirm("Delete this medicine?"))return;let m=data.medicines.find(x=>x.id===i);data.medicines=data.medicines.filter(x=>x.id!==i);log("Deleted medicine: "+m.name);save();render()}
+function shopping(){
+ let a=data.shopping.filter(x=>(x.name+" "+x.category).toLowerCase().includes(shopSearch.toLowerCase())),pending=a.filter(x=>!x.completed),done=a.filter(x=>x.completed);
+ return header("Shopping List","Keep the household shopping list simple and organized.",["+ Add Item","openShop()"])+`<div class="card"><div class="toolbar"><input id="shopSearch" value="${esc(shopSearch)}" placeholder="Search shopping list..."><button class="secondary" onclick="shopSearch=$('#shopSearch').value.trim();render()">Search</button></div>${pending.length} pending • ${done.length} completed</div>${a.map(shopCard).join("")||empty("Shopping list is empty","Add an item when needed.")}`
+}
+function shopCard(x){return `<div class="shop ${x.completed?"done":""}"><div class="iconbox">□</div><div><h4>${x.completed?"✓ ":""}${esc(x.name)}</h4><p>${esc(x.category)}</p></div><div class="actions"><button class="${x.completed?"":"ok"}" onclick="toggleShop(${x.id})">${x.completed?"Undo":"Done"}</button><button onclick="openShop(${x.id})">Edit</button><button class="danger" onclick="deleteShop(${x.id})">Delete</button></div></div>`}
+function openShop(i=null){let x=i?data.shopping.find(a=>a.id===i):null;modal(`<h3>${x?"Edit Item":"Add Shopping Item"}</h3><div class="field"><label>Item</label><input id="sn" value="${esc(x?.name||"")}" placeholder="e.g. Milk"></div><div class="field"><label>Category</label><select id="sc">${["General","Groceries","Cleaning","Household","Medicine"].map(c=>`<option ${c===(x?.category||"General")?"selected":""}>${c}</option>`).join("")}</select></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="primary" onclick="saveShop(${i||"null"})">Save Item</button></div>`)}
+function saveShop(i){let n=$("#sn").value.trim();if(!n)return alert("Please enter an item.");let x=i?data.shopping.find(a=>a.id===i):{id:id(data.shopping),completed:false,created_at:now()};Object.assign(x,{name:n,category:$("#sc").value});if(!i)data.shopping.push(x),log("Added shopping item: "+n);else log("Updated shopping item: "+n);save();closeModal();render()}
+function toggleShop(i){let x=data.shopping.find(a=>a.id===i);x.completed=!x.completed;log(`${x.completed?"Completed":"Reopened"} shopping item: ${x.name}`);save();render()}
+function deleteShop(i){if(!confirm("Delete this item?"))return;data.shopping=data.shopping.filter(x=>x.id!==i);save();render()}
+function analytics(){
+ let total=data.tasks.length,done=data.tasks.filter(x=>x.completed).length,pct=total?Math.round(done/total*100):0,days=[];
+ for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);let iso=d.toISOString().slice(0,10);days.push({iso,n:data.activity[iso]||0,label:d.toLocaleDateString(undefined,{weekday:"short"})})}
+ let max=Math.max(1,...days.map(x=>x.n));
+ return header("Analytics","A simple view of household progress.")+`<div class="stats">${stat("Completion",pct+"%","var(--green)")} ${stat("Completed",done,"var(--blue)")} ${stat("Pending",total-done,"var(--orange)")} ${stat("Overdue",data.tasks.filter(overdue).length,"var(--red)")}</div><div class="card" style="margin-top:14px"><div class="section-title">Last 7 Days</div><div class="chart">${days.map(x=>`<div class="barcol"><span style="font-size:10px">${x.n}</span><div class="bar" style="height:${Math.max(2,x.n/max*150)}px"></div><small>${x.label}</small></div>`).join("")}</div></div><div class="card"><div class="section-title">Activity by day</div>${days.slice().reverse().map(x=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span>${fmtDate(x.iso)}</span><b>${x.n} completed</b></div>`).join("")}</div>`
+}
+function assistant(){
+ return header("Assistant","Ask about tasks and shopping or give simple commands.")+`<div class="card chat"><div class="messages" id="messages">${chatHistory.map(x=>`<div class="bubble ${x.role}">${esc(x.text)}</div>`).join("")||`<div class="bubble bot">Hi. I can help with tasks and shopping.<br><br>Try: “What do I have today?”<br>“Show overdue tasks”<br>“Add clean kitchen tomorrow at 6 PM”<br>“Mark laundry as done”<br>“Show shopping list”</div>`}</div><div class="chat-input"><input id="chatInput" placeholder="Ask HomeFlow..." onkeydown="if(event.key==='Enter')sendAssistant()"><button class="primary" onclick="sendAssistant()">Send</button></div></div>`
+}
+function sendAssistant(){let q=$("#chatInput").value.trim();if(!q)return;chatHistory.push({role:"user",text:q});let a=processCommand(q);chatHistory.push({role:"bot",text:a});render()}
+function processCommand(raw){
+ let l=raw.toLowerCase();
+ if(l.includes("today")){let a=data.tasks.filter(t=>t.date===today());return a.length?"Today's tasks:\n"+a.map(t=>`• ${t.name}${t.time?" — "+fmtTime(t.time):""}${t.completed?" ✓":""}`).join("\n"):"No tasks scheduled for today."}
+ if(l.includes("overdue")){let a=data.tasks.filter(overdue);return a.length?"Overdue:\n"+a.map(t=>`• ${t.name} (${fmtDate(t.date)})`).join("\n"):"No overdue tasks."}
+ if(l.includes("shopping")){let a=data.shopping.filter(x=>!x.completed);return a.length?"Shopping list:\n"+a.map(x=>`• ${x.name}`).join("\n"):"Your shopping list is clear."}
+ if(l.includes("help"))return"Try:\n• What do I have today?\n• Show overdue tasks\n• Add clean kitchen tomorrow at 6 PM\n• Mark laundry as done\n• Show shopping list";
+ let add=l.match(/^add\\s+(.+?)(?:\\s+tomorrow)?(?:\\s+at\\s+(\\d{1,2}:\\d{2}))?$/i);
+ if(add){let name=add[1].replace(/\\s+tomorrow$/i,"").trim(),d=l.includes("tomorrow")?new Date(Date.now()+86400000):new Date();let iso=d.toISOString().slice(0,10);data.tasks.push({id:id(data.tasks),name,category:"General",date:iso,time:add[2]||"",priority:"Medium",repeat:"None",completed:false,created_at:now(),completed_at:"",notes:""});log("Assistant added task: "+name);save();return`Added "${name}" for ${fmtDate(iso)}${add[2]?" at "+fmtTime(add[2]):""}.`}
+ let mark=l.match(/mark\\s+(.+?)\\s+(?:as\\s+)?(?:done|complete|completed)/i);
+ if(mark){let n=mark[1].trim();let t=data.tasks.find(x=>x.name.toLowerCase().includes(n));if(t&&!t.completed){toggleTask(t.id);return`Done — "${t.name}" is marked complete.`}return"I couldn't find that task."}
+ return"I can help with tasks and shopping. Try “What do I have today?” or “Add clean kitchen at 6 PM”."
+}
+function share(){
+ return header("Share","Copy clean summaries to your clipboard.")+[
+ ["Today's Tasks",shareToday],["Overdue Tasks",shareOverdue],["Shopping List",shareShopping],["Progress Summary",shareProgress],["Household Summary",shareSummary]
+ ].map(([t,f])=>`<div class="card share-row"><div><h4>${t}</h4><p>Copy a clean text summary.</p></div><button class="primary" onclick="${f.name}()">Copy</button></div>`).join("")
+}
+function copy(s){navigator.clipboard?.writeText(s);toast("Copied to clipboard")}
+function shareToday(){copy("HomeFlow — Today's Tasks\n\n"+(data.tasks.filter(t=>t.date===today()).map(t=>`• ${t.name}${t.completed?" ✓":""}`).join("\n")||"No tasks."))}
+function shareOverdue(){copy("HomeFlow — Overdue Tasks\n\n"+(data.tasks.filter(overdue).map(t=>`• ${t.name} — ${fmtDate(t.date)}`).join("\n")||"No overdue tasks."))}
+function shareShopping(){copy("HomeFlow — Shopping List\n\n"+(data.shopping.filter(x=>!x.completed).map(x=>`• ${x.name}`).join("\n")||"Nothing to buy."))}
+function shareProgress(){let t=data.tasks.length,d=data.tasks.filter(x=>x.completed).length;copy(`HomeFlow — Progress\n\nCompletion: ${t?Math.round(d/t*100):0}%\nCompleted: ${d}\nPending: ${t-d}\nOverdue: ${data.tasks.filter(overdue).length}`)}
+function shareSummary(){copy(`${APP} V${VERSION} — Household Summary\n\nProfile: ${data.profile.name}\nTasks completed: ${data.tasks.filter(x=>x.completed).length}/${data.tasks.length}\nShopping items: ${data.shopping.filter(x=>!x.completed).length}\nActive medicines: ${data.medicines.filter(x=>x.active).length}\nOverdue tasks: ${data.tasks.filter(overdue).length}`)}
+function settings(){
+ return header("Settings","Customize HomeFlow and protect your local data.")+
+ `<div class="card"><div class="section-title">Profile</div><div class="field"><label>Name</label><input id="profileName" value="${esc(data.profile.name)}"></div><div class="field"><label>Subtitle</label><input id="profileSub" value="${esc(data.profile.subtitle)}"></div><button class="primary" onclick="saveProfile()">Save Profile</button></div>
+ <div class="card"><div class="section-title">Appearance</div><select onchange="changeAppearance(this.value)" class="field"><option value="dark" selected>Dark</option><option value="light">Light</option></select></div>
+ <div class="card"><div class="section-title">Data</div><p class="muted" style="font-size:11px">HomeFlow stores data locally in this browser using localStorage.</p><div class="actions"><button class="secondary" onclick="backup()">Download Backup</button><button class="danger" onclick="resetData()">Reset All Data</button></div></div>`
+}
+function saveProfile(){data.profile.name=$("#profileName").value.trim()||"Mothamai";data.profile.subtitle=$("#profileSub").value.trim()||"Household Manager";save();render();toast("Profile saved")}
+function changeAppearance(v){if(v==="light"){document.documentElement.style.setProperty("--bg","#f5f7fa");document.documentElement.style.setProperty("--sidebar","#e9edf2");document.documentElement.style.setProperty("--card","#fff");document.documentElement.style.setProperty("--card2","#f0f3f7");document.documentElement.style.setProperty("--card3","#e3e8ef");document.documentElement.style.setProperty("--text","#17202b");document.documentElement.style.setProperty("--muted","#657386");}else location.reload();data.settings.appearance=v;save()}
+function backup(){let b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="homeflow_backup_"+today()+".json";a.click();URL.revokeObjectURL(a.href)}
+function resetData(){if(!confirm("Reset all HomeFlow data?"))return;localStorage.removeItem(KEY);data=clone(DEFAULT);chatHistory=[];render()}
+function modal(inner){$("#modalRoot").innerHTML=`<div class="modal-back" onclick="if(event.target===this)closeModal()"><div class="modal">${inner}</div></div>`}
+function closeModal(){$("#modalRoot").innerHTML=""}
+function toast(s){$("#toastRoot").innerHTML=`<div class="toast">${esc(s)}</div>`;setTimeout(()=>$("#toastRoot").innerHTML="",1800)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function bind(){if(page==="Assistant"){let m=$("#messages");if(m)m.scrollTop=m.scrollHeight}}
+render();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script>
 </body>
 </html>
